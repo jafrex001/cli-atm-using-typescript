@@ -5,32 +5,13 @@ import inquirer from "inquirer";
 import * as fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 
-let usersFilePath = "./users.json";
+let usersFilePath: string = "./users.json";
 
 interface User {
   id: string;
   username: string;
   pin: number;
   balance: number;
-}
-
-async function readUsersFromFile(): Promise<User[]> {
-  try {
-    const userData: string = await fs.readFile(usersFilePath, "utf-8");
-    return JSON.parse(userData) as User[];
-  } catch (error) {
-    console.log("Error reading file, returning empty array.", error);
-    return [];
-  }
-}
-
-async function writeUsersInFile(User: User): Promise<void> {
-  try {
-    const userData = JSON.stringify(User, null, 2);
-    await fs.writeFile(usersFilePath, userData, "utf-8");
-  } catch (error) {
-    console.log("Error writing to file.", error);
-  }
 }
 
 let mainMenuInput = await inquirer.prompt([
@@ -42,19 +23,61 @@ let mainMenuInput = await inquirer.prompt([
 ]);
 
 if (mainMenuInput.mainOptions === "Register") {
-  let registerInput = await inquirer.prompt([
+  let registerInput: any = await inquirer.prompt([
     {
-      name: "registerOptions",
+      name: "registrationUsernameInput",
       type: "input",
-      message: "Enter the username you would like to register with.",
+      message: "Enter the username you would like to register with:",
+    },
+    {
+      name: "registrationPinInput",
+      type: "number",
+      message: "Create a 4 digit pin for your account:",
     },
   ]);
+
+  async function createUser(): Promise<User> {
+    let registrationUsername: string = await registerInput.registrationUsernameInput;
+    let registrationPin: number = await registerInput.registrationPinInput;
+    let newUser: User = {
+      id: uuidv4(),
+      username: registrationUsername,
+      pin: registrationPin,
+      balance: Math.floor(Math.random() * 10000000),
+    };
+    return newUser;
+  }
+
+  if (registerInput.registrationUsernameInput != "" && registerInput.registrationPinInput != "") {
+    const newUser = await createUser();
+    console.log(newUser);
+
+    async function writeUsersInFile(newUser: User): Promise<void> {
+      try {
+        const userData = JSON.stringify(newUser, null, 2);
+        await fs.writeFile(usersFilePath, userData, "utf-8");
+      } catch (error) {
+        console.log("Error writing to file.", error);
+      }
+    }
+    writeUsersInFile(newUser);
+  }
 } else if (mainMenuInput.mainOptions === "Login") {
-  let loginInput = await inquirer.prompt([
+  let loginInput: any = await inquirer.prompt([
     {
       name: "loginOptions",
       type: "input",
       message: "Enter your username.",
     },
   ]);
+}
+
+async function readUsersFromFile(): Promise<User[]> {
+  try {
+    const userData: string = await fs.readFile(usersFilePath, "utf-8");
+    return JSON.parse(userData) as User[];
+  } catch (error) {
+    console.log("Error reading file, returning empty array.", error);
+    return [];
+  }
 }
