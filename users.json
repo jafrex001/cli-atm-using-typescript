@@ -1,6 +1,14 @@
-{
-  "id": "4783fa77-a972-4e16-85b5-cc755d27708a",
-  "username": "3333",
-  "pin": 9292,
-  "balance": 217946
-}
+[
+  {
+    "id": "8aed4894-f27c-44f8-8300-b1f58bc64c67",
+    "username": "newyorkcity",
+    "pin": 3333,
+    "balance": 8557563
+  },
+  {
+    "id": "c87e4ac4-e8b8-43e1-985a-7898cb4f10d4",
+    "username": "second register",
+    "pin": 3333,
+    "balance": 8033816
+  }
+]
