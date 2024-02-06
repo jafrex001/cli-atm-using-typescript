@@ -1,5 +1,3 @@
-// An ATM Machine using Typescript accessed through the command line. Use the inquirer package to take userinput through the cli. The user can register an account and also login using a name and a pin. Account balance will be generated randomly. User can also withdraw and deposit money.
-//Use the chalk library after the main project is complete to make the project look better.
 import inquirer from "inquirer";
 import * as fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
@@ -37,7 +35,7 @@ if (mainMenuInput.mainOptions === "Register") {
     }
     if (registerInput.registrationUsernameInput != "" && registerInput.registrationPinInput != "") {
         const newUser = await createUser();
-        console.log(newUser);
+        console.log(newUser, "This message is in the user registration code block.");
         async function writeUsersInFile(newUser) {
             try {
                 const userData = JSON.stringify(newUser, null, 2);
@@ -62,6 +60,7 @@ else if (mainMenuInput.mainOptions === "Login") {
 async function readUsersFromFile() {
     try {
         const userData = await fs.readFile(usersFilePath, "utf-8");
+        console.log(userData, "This message is in the readUsersFromFile async function.");
         return JSON.parse(userData);
     }
     catch (error) {
@@ -69,3 +68,4 @@ async function readUsersFromFile() {
         return [];
     }
 }
+await readUsersFromFile();
